@@ -12,7 +12,6 @@ from emotion_detection import emotion_detector
 # Initiate the Flask app
 app = Flask("Emotion Detector")
 
-
 @app.route("/emotionDetector")
 def emotion_analyzer():
     ''' 
@@ -36,12 +35,16 @@ def emotion_analyzer():
     # Extract the dominant emotion
     dominant_emotion = response['dominant_emotion']
 
+    # Check if the dominant emotion is None (invalid text)
+    if dominant_emotion is None:
+        return "Invalid text! Please try again!"
+
     # Return the response with the emotion scores and dominant emotion
     return (f"For the given statement, the system response is: "
             f"'anger': {anger_score}, 'disgust': {disgust_score}, "
             f"'fear': {fear_score}, 'joy': {joy_score} and "
             f"'sadness': {sadness_score}. "
-            f"The dominant emotion is <b>{dominant_emotion}.</b")
+            f"The dominant emotion is <b>{dominant_emotion}</b>.")
 
 
 @app.route("/")

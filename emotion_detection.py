@@ -13,8 +13,19 @@ def emotion_detector(text_to_analyze):
         dict: A dictionary containing emotion scores for anger, disgust, fear, joy, 
               and sadness, as well as the dominant emotion (the one with the highest score).
     """
+    
+    # Handle blank input
+    if not text_to_analyze or text_to_analyze.strip() == "":
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
 
-    # URL of the Emotion Detection Service.
+    # URL of the Emotion Detection Service
     url = 'https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict'
 
     # Custom header specifying the model ID for the emotion detection service.
@@ -32,8 +43,29 @@ def emotion_detector(text_to_analyze):
     # Send a POST request to the Emotion Detection API with the input text and header.
     response = requests.post(url, json=myobj, headers=header)
 
+    # If the response status code is 400 (Bad Request), return None for all emotions.
+    if response.status_code == 400:
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
+
     # Parse the JSON response from the API.
-    formatted_response = json.loads(response.text)
+    try:
+        formatted_response = json.loads(response.text)
+    except json.JSONDecodeError:
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
 
     # Extract the emotion predictions from the response.
     emotions = formatted_response['emotionPredictions'][0].get('emotion', {})

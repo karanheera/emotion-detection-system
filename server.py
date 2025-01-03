@@ -7,7 +7,7 @@ Executing this function initiates the application of Emotion Detection
 from flask import Flask, render_template, request
 
 # Import the EmotionDetection function from the package created
-from emotion_detection import emotion_detector
+from EmotionDetection.emotion_detection import emotion_detector
 
 # Initiate the Flask app
 app = Flask("Emotion Detector")
